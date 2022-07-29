@@ -1,5 +1,4 @@
-import UIKit
-
+import Foundation
 func getData(urlRequest: String) {
     guard let url = URL(string: urlRequest) else { return }
     let configuration: URLSessionConfiguration = .default
@@ -9,13 +8,51 @@ func getData(urlRequest: String) {
     session.dataTask(with: url) { (data, response, error) in
         if error != nil {
             print(error?.localizedDescription ?? "")
-        } else { print("ошибок нет") }
-        if let response = response as? HTTPURLResponse, response.statusCode == 200 {
-            print(response)
+        } else if let response = response as? HTTPURLResponse, response.statusCode == 200 {
+            if let data = data {
+                let decoder = JSONDecoder()
+                do {
+                    let jsonData = try decoder.decode(Cards.self, from: data)
+                    jsonData.cards.forEach { card in
+                        let textToPrint = """
+                        Имя карты: \(card.nameCard)
+                        Тип: \(card.type)
+                        Мановая стоимость: \(card.manaCost)
+                        Название сета: \(card.setName)
+                        Редкость: \(card.rarity)
+                        Описание: \(card.description)
+                        ___
+                        """
+                        print(textToPrint)
+                    }
+                } catch {
+                    print(error)
+                }
+            }
         }
-        if let data = data {
-            let dataAsString = String(data: data, encoding: .utf8)
-            print(dataAsString ?? "nil")
-        }
+        
     }.resume()
+}
+//getData(urlRequest: "https://jsonplaceholder.typicode.com/posts")
+getData(urlRequest: "https://api.magicthegathering.io/v1/cards?name=Black%20Lotus")
+//getData(urlRequest: "https://api.magicthegathering.io/v1/cards?name=Opt")
+struct Cards: Codable {
+    let cards: [Card]
+}
+struct Card: Codable {
+    let nameCard: String
+    let type: String
+    let manaCost: String
+    let rarity: String
+    let setName: String
+    let description: String
+    
+    enum CodingKeys: String, CodingKey {
+        case nameCard = "name"
+        case type
+        case manaCost
+        case rarity
+        case setName
+        case description = "text"
+    }
 }

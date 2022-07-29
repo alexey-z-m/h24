@@ -17,7 +17,7 @@ func getData(urlRequest: String) {
                         let textToPrint = """
                         Имя карты: \(card.nameCard)
                         Тип: \(card.type)
-                        Мановая стоимость: \(card.manaCost)
+                        Мановая стоимость: \(card.manaCost ?? "none")
                         Название сета: \(card.setName)
                         Редкость: \(card.rarity)
                         Описание: \(card.description)
@@ -30,29 +30,30 @@ func getData(urlRequest: String) {
                 }
             }
         }
-        
     }.resume()
 }
-//getData(urlRequest: "https://jsonplaceholder.typicode.com/posts")
+
+getData(urlRequest: "https://api.magicthegathering.io/v1/cards?name=Opt")
 getData(urlRequest: "https://api.magicthegathering.io/v1/cards?name=Black%20Lotus")
-//getData(urlRequest: "https://api.magicthegathering.io/v1/cards?name=Opt")
+
 struct Cards: Codable {
     let cards: [Card]
-}
-struct Card: Codable {
-    let nameCard: String
-    let type: String
-    let manaCost: String
-    let rarity: String
-    let setName: String
-    let description: String
-    
-    enum CodingKeys: String, CodingKey {
-        case nameCard = "name"
-        case type
-        case manaCost
-        case rarity
-        case setName
-        case description = "text"
+    struct Card: Codable {
+        let nameCard: String
+        let type: String
+        let manaCost: String?
+        let rarity: String
+        let setName: String
+        let description: String
+        
+        enum CodingKeys: String, CodingKey {
+            case nameCard = "name"
+            case type
+            case manaCost
+            case rarity
+            case setName
+            case description = "text"
+        }
     }
 }
+

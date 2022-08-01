@@ -38,22 +38,22 @@ getData(urlRequest: "https://api.magicthegathering.io/v1/cards?name=Black%20Lotu
 
 struct Cards: Codable {
     let cards: [Card]
-    struct Card: Codable {
-        let nameCard: String
-        let type: String
-        let manaCost: String?
-        let rarity: String
-        let setName: String
-        let description: String
-        
-        enum CodingKeys: String, CodingKey {
-            case nameCard = "name"
-            case type
-            case manaCost
-            case rarity
-            case setName
-            case description = "text"
-        }
-    }
 }
 
+struct Card: Codable {
+    let nameCard: String
+    let type: String
+    let manaCost: String?
+    let rarity: String
+    let setName: String
+    let description: String
+    
+    enum CodingKeys: String, CodingKey {
+        case nameCard = "name"
+        case type
+        case manaCost
+        case rarity
+        case setName
+        case description = "text"
+    }
+}
